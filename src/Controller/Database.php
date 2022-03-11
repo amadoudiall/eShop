@@ -1,5 +1,5 @@
 <?php
-class database{
+class Database{
     const HOST = "mysql:host=localhost;dbname=eShop;charset=utf8";
     const USERNAME = "root";
     const PASSWORD = "root";

@@ -209,7 +209,43 @@ class User{
     public function setIs_active($is_active)
     {
         $this->is_active = $is_active;
-
         return $this;
+    }
+
+    public function getDb()
+    {
+        $bdd = new Database();
+        $this->database = $bdd->connect();
+        return $this->database;
+    }
+
+    public function getUsers()
+    {
+        $users = $this->getDb()->query('SELECT * FROM User');
+        return $users->fetchAll();
+    }
+
+    public function flushUser()
+    {
+        $addUser = $this->getDb()->prepare('INSERT INTO user(nom, prenom, age, adresse, tel, roles, email, pwd, created_at) VALUES(:nom, :prenom, :age, :adresse, :tel, :roles, :email, :pwd, :created_at)');
+        $addUser->execute([
+            'nom' => $this->nom,
+            'prenom' => $this->prenom,
+            'age' => $this->age,
+            'adresse' => $this->adresse,
+            'tel' => $this->telephone,
+            'roles' => $this->role,
+            'email' => $this->email,
+            'pwd' => $this->password,
+            'created_at' => $this->created_at,
+            'is_active' => $this->is_active
+        ]);
+    }
+
+    public function getUserByLogin($username, $password)
+    {
+        $statement = $this->getDb()->prepare('SELECT * FROM user WHERE email = ? OR tel = ?');
+        $statement->execute(array($username, $username));
+        return $statement->fetch();
     }
 }
