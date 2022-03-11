@@ -227,14 +227,14 @@ class User{
 
     public function flushUser()
     {
-        $addUser = $this->getDb()->prepare('INSERT INTO user(nom, prenom, age, adresse, tel, roles, email, pwd, created_at) VALUES(:nom, :prenom, :age, :adresse, :tel, :roles, :email, :pwd, :created_at)');
+        $addUser = $this->getDb()->prepare('INSERT INTO User(nom, prenom, age, adresse, tel, roles, email, pwd, created_at, is_active) VALUES(:nom, :prenom, :age, :adresse, :tel, :roles, :email, :pwd, :created_at, :is_active)');
         $addUser->execute([
             'nom' => $this->nom,
             'prenom' => $this->prenom,
             'age' => $this->age,
             'adresse' => $this->adresse,
-            'tel' => $this->telephone,
-            'roles' => $this->role,
+            'tel' => $this->tel,
+            'roles' => $this->roles,
             'email' => $this->email,
             'pwd' => $this->password,
             'created_at' => $this->created_at,
@@ -242,9 +242,16 @@ class User{
         ]);
     }
 
-    public function getUserByLogin($username, $password)
+    public function getUserByUnique($username, $user)
     {
-        $statement = $this->getDb()->prepare('SELECT * FROM user WHERE email = ? OR tel = ?');
+        $statement = $this->getDb()->prepare('SELECT * FROM User WHERE email = ? OR tel = ?');
+        $statement->execute(array($username, $tel));
+        return $statement->fetch();
+    }
+
+    public function getUserByLogin($username)
+    {
+        $statement = $this->getDb()->prepare('SELECT * FROM User WHERE email = ? OR tel = ?');
         $statement->execute(array($username, $username));
         return $statement->fetch();
     }

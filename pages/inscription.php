@@ -9,7 +9,8 @@ if(isset($_SESSION['user'])){
     $msg = "Vous etes déjà connecté a un compte !";
     header('location: ../index.php?msg='.$msg);
 }
-require('../src/Controller/database.php');
+require('../src/Controller/Database.php');
+require('../src/Controller/Entity/User.php');
 require('../src/Controller/Inscription.php');
 require('../src/HTML/Form.php');
 require('../src/HTML/bootstrapForm.php');
@@ -18,6 +19,10 @@ $inscription = new subscribUser();
 
 if (isset($_POST['inscription'])) {
     $inscription->Subscrib();
+}
+session_start();
+if(!empty($_SESSION['user'])){
+    header('location: /');
 }
 $title = "Inscription";
 ob_start();
